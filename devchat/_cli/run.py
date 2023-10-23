@@ -93,7 +93,7 @@ def _clone_or_pull_git_repo(target_dir: str, repo_urls: List[str]):
                 click.echo('You are advised not to modify the repository.', err=True)
                 raise
         else:
-            new_dir = target_dir + '_old'
+            new_dir = f'{target_dir}_old'
             shutil.move(target_dir, new_dir)
             click.echo(f'{target_dir} is not a valid Git repository. Moved to {new_dir}', err=True)
             clone_git_repo(target_dir, repo_urls)

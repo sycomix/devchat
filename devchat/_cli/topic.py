@@ -21,13 +21,13 @@ def topic(list_topics: bool, skip: int, max_count: int):
 
     with handle_errors():
         model, config = get_model_config(repo_chat_dir, user_chat_dir)
-        parameters_data = config.dict(exclude_unset=True)
-        openai_config = OpenAIChatConfig(model=model, **parameters_data)
-
-        chat = OpenAIChat(openai_config)
-        store = Store(repo_chat_dir, chat)
-
         if list_topics:
+            parameters_data = config.dict(exclude_unset=True)
+            openai_config = OpenAIChatConfig(model=model, **parameters_data)
+
+            chat = OpenAIChat(openai_config)
+            store = Store(repo_chat_dir, chat)
+
             topics = store.select_topics(skip, skip + max_count)
             for topic_data in topics:
                 try:

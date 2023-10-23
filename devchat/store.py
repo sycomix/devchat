@@ -69,11 +69,10 @@ class Store:
     def _initialize_topics_table(self):
         roots = [node for node in self._graph.nodes() if self._graph.out_degree(node) == 0]
         for root in roots:
-            ancestors = nx.ancestors(self._graph, root)
-            if not ancestors:
-                latest_time = self._graph.nodes[root]['timestamp']
-            else:
+            if ancestors := nx.ancestors(self._graph, root):
                 latest_time = max(self._graph.nodes[node]['timestamp'] for node in ancestors)
+            else:
+                latest_time = self._graph.nodes[root]['timestamp']
             self._topics_table.insert({
                 'root': root,
                 'latest_time': latest_time,

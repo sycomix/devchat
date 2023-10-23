@@ -151,18 +151,7 @@ def test_prompt_log_with_functions(git_repo, functions_file):  # pylint: disable
 
 
 def test_prompt_log_compatibility():
-    # import test!!
-    # Historical Record Compatibility Test
-    # create git repo folder
-    # install old devchat
-    # run prompt, create old version records
-    # run topic -l, expect topic list
-    # uninstall old devchat
-    # install new devchat
-    # run topic -l, expect topic list
-    # run prompt -f ~/.chat/functions.json "list files in porject", expect function call return
-    # run topic -l, expect function call in topic list
-    assert True
+    pass
 
 
 # test prompt with function replay

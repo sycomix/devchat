@@ -139,11 +139,10 @@ class OpenAIPrompt(Prompt):
         if not self._prepend_history(Message.CHAT, prompt.request, token_limit):
             return False
 
-        # Append the context messages of the appended prompt
-        for context_message in prompt.new_context:
-            if not self._prepend_history(Message.CONTEXT, context_message, token_limit):
-                return False
-        return True
+        return all(
+            self._prepend_history(Message.CONTEXT, context_message, token_limit)
+            for context_message in prompt.new_context
+        )
 
     def set_request(self, content: str, function_name: Optional[str] = None) -> int:
         if not content.strip():
@@ -197,8 +196,6 @@ class OpenAIPrompt(Prompt):
         for choice in response_data['choices']:
             delta = choice['delta']
             index = choice['index']
-            finish_reason = choice['finish_reason']
-
             if index >= len(self.responses):
                 self.responses.extend([None] * (index - len(self.responses) + 1))
                 self._response_reasons.extend([None] * (index - len(self._response_reasons) + 1))
@@ -216,14 +213,14 @@ class OpenAIPrompt(Prompt):
                 if 'function_call' in delta:
                     if 'name' in delta['function_call']:
                         self.responses[index].function_call['name'] = \
-                            self.responses[index].function_call.get('name', '') + \
-                            delta['function_call']['name']
+                                self.responses[index].function_call.get('name', '') + \
+                                delta['function_call']['name']
                     if 'arguments' in delta['function_call']:
                         self.responses[index].function_call['arguments'] = \
-                            self.responses[index].function_call.get('arguments', '') + \
-                            delta['function_call']['arguments']
+                                self.responses[index].function_call.get('arguments', '') + \
+                                delta['function_call']['arguments']
 
-            if finish_reason:
+            if finish_reason := choice['finish_reason']:
                 self._response_reasons[index] = finish_reason
         return delta_content
 

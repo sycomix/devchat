@@ -48,8 +48,7 @@ def log(skip, max_count, topic_root, insert, delete):
         store = Store(repo_chat_dir, chat)
 
         if delete:
-            success = store.delete_prompt(delete)
-            if success:
+            if success := store.delete_prompt(delete):
                 click.echo(f"Prompt {delete} deleted successfully.")
             else:
                 click.echo(f"Failed to delete prompt {delete}.")

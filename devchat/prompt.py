@@ -66,10 +66,7 @@ class Prompt(ABC):
             logger.warning("Prompt lacks timestamp for hashing: %s", self.request)
             return False
 
-        if not self._response_tokens:
-            return False
-
-        return True
+        return bool(self._response_tokens)
 
     @property
     def new_context(self) -> List[Message]:
@@ -239,18 +236,18 @@ class Prompt(ABC):
         note = None
         formatted_str = "\n\n"
         reason = self._response_reasons[index]
-        if reason == 'length':
-            note = "Incomplete model output due to max_tokens parameter or token limit"
+        if reason == 'content_filter':
+            note = "Omitted content due to a flag from our content filters"
+
         elif reason == 'function_call':
             formatted_str += self.responses[index].function_call_to_json() + "\n\n"
             note = "The model decided to call a function"
-        elif reason == 'content_filter':
-            note = "Omitted content due to a flag from our content filters"
-
+        elif reason == 'length':
+            note = "Incomplete model output due to max_tokens parameter or token limit"
         if note:
             formatted_str += f"Note: {note} (finish_reason: {reason})\n\n"
 
-        return formatted_str + f"prompt {self.hash}"
+        return f"{formatted_str}prompt {self.hash}"
 
     def formatted_full_response(self, index: int) -> str:
         """
@@ -279,11 +276,11 @@ class Prompt(ABC):
         if not self.request or not self.responses:
             raise ValueError("Prompt is incomplete for shortlog.")
 
-        responses = []
-        for message in self.responses:
-            responses.append((message.content if message.content else "")
-                             + message.function_call_to_json())
-
+        responses = [
+            (message.content if message.content else "")
+            + message.function_call_to_json()
+            for message in self.responses
+        ]
         return {
             "user": user_id(self.user_name, self.user_email)[0],
             "date": self._timestamp,

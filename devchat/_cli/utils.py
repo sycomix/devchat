@@ -141,6 +141,6 @@ def get_model_config(repo_chat_dir: str, user_chat_dir: str,
             if config:
                 manager.update_model_config(model, config)
             manager.sync()
-            os.rename(legacy_path, legacy_path + '.old')
+            os.rename(legacy_path, f'{legacy_path}.old')
 
     return manager.model_config(model)

@@ -80,8 +80,6 @@ class OpenAIChat(Chat):
             config_params['function_call'] = 'auto'
         config_params['stream'] = True
 
-        response = openai.ChatCompletion.create(
-            messages=prompt.messages,
-            **config_params
+        return openai.ChatCompletion.create(
+            messages=prompt.messages, **config_params
         )
-        return response

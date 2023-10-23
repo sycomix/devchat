@@ -87,12 +87,9 @@ def add_gitignore(target_dir: str, *ignore_entries: str) -> None:
         with open(gitignore_path, 'r', encoding='utf-8') as gitignore_file:
             gitignore_content = gitignore_file.read()
 
-        new_entries = []
-        for entry in ignore_entries:
-            if entry not in gitignore_content:
-                new_entries.append(entry)
-
-        if new_entries:
+        if new_entries := [
+            entry for entry in ignore_entries if entry not in gitignore_content
+        ]:
             with open(gitignore_path, 'a', encoding='utf-8') as gitignore_file:
                 gitignore_file.write('\n# devchat\n')
                 for entry in new_entries:
@@ -108,10 +105,7 @@ def unix_to_local_datetime(unix_time) -> datetime.datetime:
     # Convert the Unix time to a naive datetime object in UTC
     naive_dt = datetime.datetime.utcfromtimestamp(unix_time).replace(tzinfo=datetime.timezone.utc)
 
-    # Convert the UTC datetime object to the local timezone
-    local_dt = naive_dt.astimezone()
-
-    return local_dt
+    return naive_dt.astimezone()
 
 
 def get_user_info() -> Tuple[str, str]:
@@ -125,7 +119,7 @@ def get_user_info() -> Tuple[str, str]:
         cmd = ['git', 'config', 'user.email']
         user_email = subprocess.check_output(cmd, encoding='utf-8').strip()
     except Exception:
-        user_email = user_name + '@' + socket.gethostname()
+        user_email = f'{user_name}@{socket.gethostname()}'
 
     return user_name, user_email
 
@@ -148,10 +142,10 @@ def parse_files(file_paths: List[str]) -> List[str]:
     contents = []
     for file_path in file_paths:
         with open(file_path, 'r', encoding='utf-8') as file:
-            content = file.read()
-            if not content:
+            if content := file.read():
+                contents.append(content)
+            else:
                 raise ValueError(f"File {file_path} is empty.")
-            contents.append(content)
     return contents
 
 

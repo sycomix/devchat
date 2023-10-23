@@ -29,9 +29,7 @@ class CommandParser:
         :return: The JSON representation of the command.
         """
         file_path = self.namespace.get_file(name, 'command.yml')
-        if not file_path:
-            return None
-        return parse_command(file_path)
+        return None if not file_path else parse_command(file_path)
 
     def parse_json(self, name: str) -> str:
         """
@@ -41,9 +39,7 @@ class CommandParser:
         :return: The JSON representation of the command.
         """
         file_path = self.namespace.get_file(name, 'command.yml')
-        if not file_path:
-            return None
-        return parse_command(file_path).json()
+        return None if not file_path else parse_command(file_path).json()
 
 
 def parse_command(file_path: str) -> Command:
@@ -55,5 +51,4 @@ def parse_command(file_path: str) -> Command:
     """
     with open(file_path, 'r', encoding='utf-8') as file:
         config_dict = yaml.safe_load(file)
-    config = Command(**config_dict)
-    return config
+    return Command(**config_dict)

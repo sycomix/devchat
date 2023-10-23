@@ -10,8 +10,7 @@ class RecursivePrompter:
         merged_content = ''
         for index in range(len(ancestors)):
             ancestor_name = '.'.join(ancestors[:index + 1])
-            file_path = self.namespace.get_file(ancestor_name, 'prompt.txt')
-            if file_path:
+            if file_path := self.namespace.get_file(ancestor_name, 'prompt.txt'):
                 with open(file_path, 'r', encoding='utf-8') as file:
                     merged_content += file.read()
                     merged_content += '\n'

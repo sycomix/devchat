@@ -65,7 +65,7 @@ def test_legacy_config(git_repo, mock_home_dir):
     result = runner.invoke(main, ['log'])
     assert result.exit_code == 0
     assert not os.path.exists(legacy_file)
-    assert os.path.isfile(legacy_file + '.old')
+    assert os.path.isfile(f'{legacy_file}.old')
     config_manager = ConfigManager(home_chat_dir)
     assert config_manager.config.default_model == 'gpt-3.5-turbo'
     assert config_manager.config.models['gpt-3.5-turbo'].max_input_tokens == 2000

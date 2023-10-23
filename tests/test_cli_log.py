@@ -30,11 +30,7 @@ def _within_range(num1: int, num2: int) -> bool:
     :return: True if the numbers are within the specified range, False otherwise
     """
     diff = abs(num1 - num2)
-    if diff <= 3:
-        return True
-    if diff / ((num1 + num2) / 2) * 100 <= 3:
-        return True
-    return False
+    return True if diff <= 3 else diff / ((num1 + num2) / 2) <= 3 / 100
 
 
 def test_tokens_with_log(git_repo):  # pylint: disable=W0613

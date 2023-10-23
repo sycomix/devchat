@@ -96,7 +96,7 @@ class Assistant:
             config_params = self._chat.config.dict(exclude_unset=True)
             for chunk in self._chat.stream_response(self._prompt):
                 if "id" not in chunk or "index" not in chunk["choices"][0]:
-                    chunk["id"] = "chatcmpl-7vdfQI02x-" + str(created_time)
+                    chunk["id"] = f"chatcmpl-7vdfQI02x-{created_time}"
                     chunk["object"] = "chat.completion.chunk"
                     chunk["created"] = created_time
                     chunk["model"] = config_params["model"]
